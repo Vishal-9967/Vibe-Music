@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import "./App.scss";
 import Home from "../components/Pages/Home";
+import Login from "../components/Pages/Login";
+import Signup from "../components/Pages/Signup";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Landing from "../components/Pages/Landing";
 import { ThemeContext, themes } from "../api/Theme";
@@ -36,6 +38,9 @@ const App = () => {
           <Switch>
             <Route path="/" exact component={Landing} />
             <Route path="/home" component={Home} />
+            <Route path="/login" component={Login}/>
+            <Route path="/signup" component={Signup}/>
+
           </Switch>
         </Router>
       </>
