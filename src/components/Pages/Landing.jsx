@@ -19,7 +19,7 @@ class Login extends React.Component {
           <div className="main-row-text">
             <h1>Music for everyone</h1>
             <p>Without music, life would be a mistake</p>
-            <Link to={"/home"} className="btn">
+            <Link to={"/login"} className="btn">
               Hit Play
             </Link>
           </div>
