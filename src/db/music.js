@@ -11,7 +11,7 @@ let musicDB = [
     attribution: {
       song: "Clarx - Shakedown [NCS Release]",
       musicBy: "NoCopyrightSounds",
-      download: "http://ncs.io/Shakedown",
+      // download: "http://ncs.io/Shakedown",
       stream: "http://youtu.be/qJT0mc3q6Lg",
     },
   },
@@ -471,7 +471,7 @@ let musicDB = [
     img: "A2.jpg",
     lang: "Hindi",
     timesPlayed: 0,
-    type: "instrumental",
+    type: "electronic",
     musicName: "A2.mp3",
     attribution: {
       song: "Khairiyat",
