@@ -3,42 +3,51 @@ import React,{ useState } from "react";
 // import './css/Signup.css';
 import { Link,  useHistory } from "react-router-dom";
 import Validation from "./SignupValidation";
-import axios from 'axios';
+import { auth } from '../../firebase';
+import {  createUserWithEmailAndPassword, updateProfile  } from 'firebase/auth';
 // ABHI CSS Baki Hai aur Responsiveness........................
 
 function Signup() {
-  const [values, setValues] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+
   const history = useHistory();
   const [errors, setErrors] = useState({});
 
-  const handleInput = (event) => {
-    setValues((prev) => ({
-      ...prev,
-      [event.target.name]: [event.target.value],
-    }));
-  };
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrors(Validation(values)); 
-    // getting error.....
-  if(errors.name==="" && errors.email==="" && errors.password==="" ){
-axios.post('http://localhost:8081/signup', values)
-.then(res => {
-  history.push('/login');
-})
-.catch(err=> console.log(err));
-  }
+    setErrors(Validation({
+      name: name,
+      email: email,
+      password: password
+    }));
+    await createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user);
+            updateProfile(user, { displayName: name });
+            window.location.href = '/login'
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+            setErrors({ error : errorMessage})
+            alert(errorMessage);
+            // ..
+        });
+
   };
   return (
     <div className="d-flex justify-content-center align-items-center bg-primary vh-100">
       {/* BOOTSTRAP............ */}
       <div className="bg-white p-3 rounded w-25">
         <h2>Sign-Up</h2>
-        <form action="" onSubmit={handleSubmit}>
+        <form action="/login" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name">
               <strong>Name</strong>
@@ -46,7 +55,8 @@ axios.post('http://localhost:8081/signup', values)
             <input
               type="name"
               name="name"
-              onChange={(e) => setValues({ name: e.target.value })}
+              value={name}
+              onChange={(e) => setName(e.target.value )}
               className="form-control rounded-0"
               placeholder="Enter Your Name"
             />
@@ -60,7 +70,8 @@ axios.post('http://localhost:8081/signup', values)
             <input
               type="email"
               name="email"
-              onChange={(e) => setValues({ email: e.target.value })}
+              value={email}
+              onChange={(e) => setEmail(e.target.value )}
               className="form-control rounded-0"
               placeholder="Enter Email"
             />
@@ -76,7 +87,8 @@ axios.post('http://localhost:8081/signup', values)
             <input
               type="password"
               name="password"
-              onChange={(e) => setValues({ password: e.target.value })}
+              value={password}
+              onChange={(e) => setPassword(e.target.value )}
               className="form-control rounded-0"
               placeholder="Enter Password"
             />

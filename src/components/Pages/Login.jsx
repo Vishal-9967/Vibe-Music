@@ -2,24 +2,37 @@ import React, { useState } from "react";
 // import "./css/Login.css";
 import { Link } from "react-router-dom";
 import Validation from "./LoginValidation";
+import { auth } from '../../firebase';
+import {  signInWithEmailAndPassword  } from 'firebase/auth';
+
 // ABHI CSS Baki Hai aur Responsiveness........................
 
 function Login() {
-  const [values, setValues] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
 
-  const handleInput = (event) => {
-    setValues((prev) => ({
-      ...prev,
-      [event.target.name]: [event.target.value],
-    }));
-  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    setErrors(Validation(values)); // getting error.....
+    setErrors(Validation({
+      email: email,
+      password: password
+    }));
+    // setErrors(Validation(values)); // getting error.....
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            window.location.href = "/home"
+            console.log(user);
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage)
+            alert(errorMessage);
+        });
   };
 
   return (
@@ -36,7 +49,8 @@ function Login() {
               type="email"
               name="email"
               placeholder="Enter Email"
-              onChange={(e) => setValues({ email: e.target.value })}
+              value={email}
+              onChange={(e) => setEmail( e.target.value)}
               className="form-control rounded-0"
             />
             {errors.email && (
@@ -51,16 +65,17 @@ function Login() {
               type="password"
               name="password"
               placeholder="Enter Password"
-              onChange={(e) => setValues({ password: e.target.value })}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="form-control rounded-0"
             />
             {errors.password && (
               <span className="text-danger">{errors.password}</span>
             )}
           </div>
-          <Link to="/home" type="submit" className="btn btn-success w-100 ">
+          <button to="/home" type="submit" className="btn btn-success w-100 ">
             Log in
-          </Link>
+          </button>
           <p>You agree to our terms and policies</p>
           <Link
             to="/signup"
