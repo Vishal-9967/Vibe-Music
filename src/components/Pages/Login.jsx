@@ -26,6 +26,7 @@ function Login() {
             const user = userCredential.user;
             window.location.href = "/home"
             console.log(user);
+            localStorage.setItem("user", user.displayName);
         })
         .catch((error) => {
             const errorCode = error.code;
